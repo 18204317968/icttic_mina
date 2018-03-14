@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bonc.core.mapper.MinaHomeCarouselMapper" >
+  <resultMap id="BaseResultMap" type="com.bonc.core.entity.MinaHomeCarousel" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="img_id" property="imgId" jdbcType="INTEGER" />
+    <result column="img_name" property="imgName" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="img_state" property="imgState" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="selectImgList" resultMap="BaseResultMap">
+        select m.img_url
+        FROM mina_home_carousel m
+        WHERE m.img_state = 1
+    </select>
+</mapper>

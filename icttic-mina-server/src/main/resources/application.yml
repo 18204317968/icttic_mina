@@ -1,0 +1,96 @@
+logging:
+    level:
+        tk.mybatis: debug
+        com.bonc.core: INFO
+spring:
+    application:
+        name: icttic-mina-server
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+        default-property-inclusion: non_null
+
+    datasource:
+        name: mysql
+        url: jdbc:mysql://localhost:3306/icttic_mina?useUnicode=true&characterEncoding=UTF8
+        username: root
+        password: root
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+mybatis:
+    basepackage: com.bonc.core.mapper
+    xmlLocation: classpath:mapper/**/*.xml
+
+# tomcat端口
+tomcat:
+    port: 1991
+    connector: org.apache.coyote.http11.Http11NioProtocol
+
+# https配置
+server:
+    port: 8443
+    ssl:
+        key-store: classpath:keystore.p12
+        key-store-password: icttic-mina
+        keyStoreType: PKCS12
+        keyAlias: icttic-mina
+
+# 高德地图开发者key
+amap:
+    key: ee7f542dd63ce2aac1b6db00c9c44044
+
+# 周边搜索接口
+place:
+    around:
+        url: http://restapi.amap.com/v3/place/around?key=%s&location=%s&keywords=%s&types=%s&radius=%s&offset=%s&page=%s&extensions=all
+
+# 营业网点名更新接口
+update:
+    yywdName:
+        url: http://restapi.amap.com/v3/place/text?key=%s&keywords=%s&types=&city=%s&children=1&offset=1&page=1&extensions=all
+
+# 一卡通搜索关键词
+onecard:
+    keyword: 一卡通
+
+# 公交站搜索关键词
+busline:
+    keyword: 公交站
+    type: 150700
+
+swagger:
+    basepackage: com.bonc.core
+    service:
+        name: ICTTIC MINA SERVICE
+        description: ICTTIC 微信小程序后端服务
+        developer: 张铄
+
+# oauth2 资源服务器配置
+oauth2:
+    skip:
+        urls: /openapi/getToken,/api/bonc/inPursuitOfTreasure,/swagger-ui.html,/swagger-resources/configuration/ui,/swagger-resources,/v2/api-docs,/swagger-resources/configuration/security
+    check:
+        remote:
+            client_id: ictticMina
+            client_secret: boncadmin
+            base: http://172.16.20.34:8383
+            endpoint: /oauth/check_token
+            access_token_uri: /oauth/token
+    # 跨站请求关闭，如果没有必要，不要设置这个！
+    server:
+        csrf:
+            disable:

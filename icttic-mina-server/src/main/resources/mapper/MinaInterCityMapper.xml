@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.core.mapper.MinaInterCityMapper">
+  <resultMap id="BaseResultMap" type="com.bonc.core.entity.MinaInterCity">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="card_province_name" jdbcType="VARCHAR" property="cardProvinceName" />
+    <result column="card_province_code" jdbcType="VARCHAR" property="cardProvinceCode" />
+    <result column="card_city_name" jdbcType="VARCHAR" property="cardCityName" />
+    <result column="card_city_code" jdbcType="VARCHAR" property="cardCityCode" />
+    <result column="card_issuer" jdbcType="VARCHAR" property="cardIssuer" />
+    <result column="busline_name" jdbcType="VARCHAR" property="buslineName" />
+    <result column="card_price" jdbcType="VARCHAR" property="cardPrice" />
+    <result column="card_type" jdbcType="VARCHAR" property="cardType" />
+    <result column="basic_fare" jdbcType="VARCHAR" property="basicFare" />
+    <result column="allopatry_discount" jdbcType="VARCHAR" property="allopatryDiscount" />
+    <result column="official_site" jdbcType="VARCHAR" property="officialSite" />
+    <result column="official_wechat_account" jdbcType="VARCHAR" property="officialWechatAccount" />
+    <result column="phone_hotline" jdbcType="VARCHAR" property="phoneHotline" />
+    <result column="card_num" jdbcType="INTEGER" property="cardNum" />
+    <result column="basic_fare_details" jdbcType="VARCHAR" property="basicFareDetails" />
+    <result column="allopatry_discount_detail" jdbcType="VARCHAR" property="allopatryDiscountDetail" />
+  </resultMap>
+
+  <select id="selectDiscount" resultMap="BaseResultMap">
+
+    SELECT t.card_province_name ,t.card_province_code ,t.card_city_name ,t.card_city_code ,
+     t.card_type ,  t.allopatry_discount_detail allopatry_discount
+
+   FROM mina_inter_city t
+    <if test='cityCode != null and cityCode != ""'>
+        where t.card_city_code=#{cityCode}
+    </if>
+  </select>
+
+  <select id="selectBasicFare" resultMap="BaseResultMap">
+
+  SELECT t.card_province_name ,t.card_province_code ,t.card_city_name ,t.card_city_code ,
+  t.card_type ,  t.basic_fare_details basic_fare
+
+  FROM mina_inter_city t
+    <if test='cityCode != null and cityCode != ""'>
+        where t.card_city_code=#{cityCode}
+    </if>
+  </select>
+
+  <select id="selectCardCount" resultMap="BaseResultMap">
+
+SELECT t.card_province_name ,t.card_province_code ,t.card_city_name ,t.card_city_code ,
+      t.card_num card_num
+
+   FROM mina_inter_city t where t.card_city_code=#{cityName}
+
+
+  </select>
+
+  <select id="selectCity" resultMap="BaseResultMap">
+
+SELECT t.card_province_name ,t.card_province_code ,t.card_city_name ,t.card_city_code  FROM mina_inter_city t
+  </select>
+  <select id="selectCardDetail" resultMap="BaseResultMap">
+    SELECT c.* FROM mina_inter_city c
+    where c.card_province_code=#{provinceCode} AND c.card_city_name=#{cityName}
+  </select>
+</mapper>

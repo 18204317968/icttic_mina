@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.wxiaoqi</groupId>
+    <artifactId>ace-security-v2</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>1.5.6.RELEASE</version>
+    </parent>
+    <properties>
+        <docker.image.prefix>ag</docker.image.prefix>
+        <docker.plugin.version>0.4.13</docker.plugin.version>
+        <mapper.version>3.4.0</mapper.version>
+        <mybatis.version>3.3.1</mybatis.version>
+        <mybatis.spring.version>1.2.4</mybatis.spring.version>
+        <pagehelper.version>4.1.1</pagehelper.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Dalston.SR3</spring-cloud.version>
+    </properties>
+    <modules>
+
+        <!--公共服务接口包-->
+        <module>ace-api</module>
+        <!--公共部分-->
+        <module>ace-common</module>
+
+        <!--icttic微信小程序后台-->
+        <module>icttic-mina-server</module>
+
+    </modules>
+    <packaging>pom</packaging>
+    <!--依赖管理，用于管理spring-cloud的依赖，其中Camden.SR3是版本号-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.33</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

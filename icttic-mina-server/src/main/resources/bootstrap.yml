@@ -1,0 +1,9 @@
+spring:
+    cloud:
+        config:
+            label: master
+            name: core
+            profile: dev
+            discovery:
+              service-id: ace-config
+              enabled: true

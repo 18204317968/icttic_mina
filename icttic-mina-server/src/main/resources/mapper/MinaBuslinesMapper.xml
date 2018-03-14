@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.core.mapper.MinaBuslinesMapper">
+  <resultMap id="BaseResultMap" type="com.bonc.core.entity.MinaBuslines">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="VARCHAR" property="id"/>
+    <result column="busline_name" jdbcType="VARCHAR" property="buslineName"/>
+    <result column="first_front_name" jdbcType="VARCHAR" property="firstFrontName"/>
+    <result column="first_terminal_name" jdbcType="VARCHAR" property="firstTerminalName"/>
+    <result column="first_start_time" jdbcType="VARCHAR" property="firstStartTime"/>
+    <result column="first_end_time" jdbcType="VARCHAR" property="firstEndTime"/>
+    <result column="second_front_name" jdbcType="VARCHAR" property="secondFrontName"/>
+    <result column="second_terminal_name" jdbcType="VARCHAR" property="secondTerminalName"/>
+    <result column="second_start_time" jdbcType="VARCHAR" property="secondStartTime"/>
+    <result column="second_end_time" jdbcType="VARCHAR" property="secondEndTime"/>
+    <result column="busline_province_code" jdbcType="VARCHAR" property="buslineProvinceCode"/>
+    <result column="busline_province_name" jdbcType="VARCHAR" property="buslineProvinceName"/>
+    <result column="busline_city_code" jdbcType="VARCHAR" property="buslineCityCode"/>
+    <result column="busline_city_name" jdbcType="VARCHAR" property="buslineCityName"/>
+    <result column="interconnected" jdbcType="VARCHAR" property="interconnected"/>
+    <result column="length" jdbcType="VARCHAR" property="length"/>
+    <result column="stations" jdbcType="OTHER" property="stations"/>
+    <result column="company" jdbcType="VARCHAR" property="company"/>
+    <result column="basic_price" jdbcType="VARCHAR" property="basicPrice"/>
+    <result column="total_price" jdbcType="VARCHAR" property="totalPrice"/>
+    <result column="xs" jdbcType="LONGVARCHAR" property="xs"/>
+    <result column="ys" jdbcType="LONGVARCHAR" property="ys"/>
+  </resultMap>
+
+  <!--根据省市线路名查询附近公交线路-->
+  <select id="selectNearbyBuslines" resultType="java.util.Map">
+    select busline_name,first_front_name,first_terminal_name,
+			concat(left(first_start_time,2),':',right(first_start_time,2))first_start_time,
+			concat(left(first_end_time,2),':',right(first_end_time,2)) first_end_time,
+			second_front_name,second_terminal_name,
+			concat(left(second_start_time,2),':',right(second_start_time,2)) second_start_time,
+			concat(left(second_end_time,2),':',right(second_end_time,2)) second_end_time
+    FROM mina_buslines
+    WHERE busline_province_code = #{provinceCode} and busline_city_name = #{cityName} and busline_name = #{buslineName}
+  </select>
+
+  <!--根据省市线路名查询互联互通公交线路-->
+  <select id="selectInterconnectedBuslines" resultMap="BaseResultMap">
+    select busline_name,first_front_name,first_terminal_name,
+			concat(left(first_start_time,2),':',right(first_start_time,2))first_start_time,
+			concat(left(first_end_time,2),':',right(first_end_time,2)) first_end_time,
+			second_front_name,second_terminal_name,
+			concat(left(second_start_time,2),':',right(second_start_time,2)) second_start_time,
+			concat(left(second_end_time,2),':',right(second_end_time,2)) second_end_time
+    FROM mina_buslines
+    WHERE busline_province_code = #{provinceCode} and busline_city_name = #{cityName} and interconnected = '1'
+    ORDER BY busline_name ASC
+  </select>
+
+
+  <select id="selectInterconnectedBuslinesCityCode" resultMap="BaseResultMap">
+    select busline_name,first_front_name,first_terminal_name,
+    concat(left(first_start_time,2),':',right(first_start_time,2))first_start_time,
+    concat(left(first_end_time,2),':',right(first_end_time,2)) first_end_time,
+    second_front_name,second_terminal_name,
+    concat(left(second_start_time,2),':',right(second_start_time,2)) second_start_time,
+    concat(left(second_end_time,2),':',right(second_end_time,2)) second_end_time
+    FROM mina_buslines
+    WHERE   busline_city_code = #{cityCode} and interconnected = '1'
+    ORDER BY busline_name ASC
+  </select>
+
+  <!--根据省查询所有公交线路数量-->
+  <select id="selectTotalBuslinesCount" resultType="java.lang.String">
+    select count(1)
+    FROM mina_buslines
+    WHERE busline_province_code = #{provinceCode}
+  </select>
+
+  <!--根据省查询互联互通公交线路数量-->
+  <select id="selectInterconnectedBuslinesCount" resultType="java.lang.String">
+    select count(1)
+    FROM mina_buslines
+    WHERE busline_province_code = #{provinceCode} and interconnected = '1'
+  </select>
+
+  <!--借此mapper查询一下cms的表-->
+  <!--查询cms中的nodeId-->
+  <select id="selectCmsNodeId" resultType="java.util.Map">
+    select f_node_id,f_name
+    FROM icttic_v1.cms_node
+    WHERE f_name in ('要闻','通知','视频','媒体','政策法规')
+    AND f_site_id =25
+  </select>
+
+  <!--根据nodeId查询infoId，并查询出infoId的摘要-->
+  <select id="selectCmsInfo" resultType="java.util.Map" parameterType="java.lang.String">
+    select a.f_info_id,a.f_title,ifnull(a.f_small_image,'') f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
+    from icttic_v1.cms_info_detail a ,icttic_v1.cms_info b
+    where a.f_info_id = b.f_info_id
+    and a.f_info_id in (select f_info_id FROM icttic_v1.cms_info WHERE f_node_id = ${nodeId})
+  </select>
+
+  <!--根据infoId查询infoId的详情-->
+  <select id="selectCmsInfoDetail" resultType="java.util.Map" parameterType="java.lang.String">
+    select a.f_info_id,a.f_title,c.f_value,ifnull(a.f_small_image,'') f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
+    from icttic_v1.cms_info_detail a ,icttic_v1.cms_info b, icttic_v1.cms_info_clob c
+    where a.f_info_id = b.f_info_id
+    and a.f_info_id = c.f_info_id
+    and c.f_key = 'text'
+    and a.f_info_id = ${infoId}
+  </select>
+</mapper>

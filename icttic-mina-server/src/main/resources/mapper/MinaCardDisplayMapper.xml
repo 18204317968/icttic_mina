@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bonc.core.mapper.MinaCardDisplayMapper" >
+  <resultMap id="BaseResultMap" type="com.bonc.core.entity.MinaCardDisplay" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="card_name" property="cardName" jdbcType="VARCHAR" />
+    <result column="card_img_url" property="cardImgUrl" jdbcType="VARCHAR" />
+    <result column="card_province_name" property="cardProvinceName" jdbcType="VARCHAR" />
+    <result column="card_province_code" property="cardProvinceCode" jdbcType="VARCHAR" />
+    <result column="card_city_name" property="cardCityName" jdbcType="VARCHAR" />
+    <result column="card_city_code" property="cardCityCode" jdbcType="VARCHAR" />
+    <result column="card_use_gong" property="cardUseGong" jdbcType="VARCHAR" />
+    <result column="card_use_di" property="cardUseDi" jdbcType="VARCHAR" />
+    <result column="card_use_lun" property="cardUseLun" jdbcType="VARCHAR" />
+    <result column="card_use_zi" property="cardUseZi" jdbcType="VARCHAR" />
+    <result column="card_use_chu" property="cardUseChu" jdbcType="VARCHAR" />
+    <result column="card_use_ting" property="cardUseTing" jdbcType="VARCHAR" />
+    <result column="card_province_img_url" property="cardProvinceImgUrl" jdbcType="VARCHAR" />
+    <result column="card_share_img_url" property="cardShareImgUrl" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="selectAllCards" resultMap="BaseResultMap">
+      SELECT c.* FROM mina_card_display c
+    </select>
+    <select id="selectCardByPC" resultMap="BaseResultMap">
+      SELECT c.* FROM mina_card_display c
+      where c.card_province_code=#{provinceCode} AND c.card_city_name=#{cityName}
+    </select>
+    <select id="selectCardByP" resultMap="BaseResultMap">
+       SELECT c.* FROM mina_card_display c
+      where c.card_province_code=#{provinceCode}
+    </select>
+    <select id="selectProvinceImgUrl" resultMap="BaseResultMap">
+        SELECT c.card_province_img_url, c.card_share_img_url from mina_card_display c
+        WHERE c.card_province_code=#{provinceCode} AND c.card_city_name=#{cityName}
+    </select>
+</mapper>

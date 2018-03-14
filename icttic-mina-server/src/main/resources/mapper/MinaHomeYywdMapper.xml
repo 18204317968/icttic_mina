@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bonc.core.mapper.MinaHomeYywdMapper">
+  <resultMap id="BaseResultMap" type="com.bonc.core.entity.MinaHomeYywd">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="yywd_name" property="yywdName" jdbcType="VARCHAR"/>
+    <result column="yywd_location" property="yywdLocation" jdbcType="VARCHAR"/>
+    <result column="yywd_img_url" property="yywdImgUrl" jdbcType="VARCHAR"/>
+    <result column="yywd_province_code" property="yywdProvinceCode" jdbcType="VARCHAR"/>
+    <result column="yywd_province_name" property="yywdProvinceName" jdbcType="VARCHAR"/>
+    <result column="yywd_city_code" property="yywdCityCode" jdbcType="VARCHAR"/>
+    <result column="yywd_city_name" property="yywdCityName" jdbcType="VARCHAR"/>
+    <result column="yywd_district_code" property="yywdDistrictCode" jdbcType="VARCHAR"/>
+    <result column="yywd_district_name" property="yywdDistrictName" jdbcType="VARCHAR"/>
+    <result column="yywd_fkcz" property="yywdFkcz" jdbcType="VARCHAR"/>
+    <result column="yywd_tktz" property="yywdTktz" jdbcType="VARCHAR"/>
+    <result column="yywd_cz" property="yywdCz" jdbcType="VARCHAR"/>
+  </resultMap>
+
+
+  <select id="selectQualificationsByName" resultMap="BaseResultMap">
+  select yywd_name as yywdName ,yywd_location yywdLocation
+  FROM mina_home_yywd
+    <if test='name != null and name != ""'>
+      WHERE yywd_name like '%${name}%'
+    </if>
+  </select>
+
+  <!--查询发卡充资等资质-->
+  <select id="selectQualifications" resultType="java.util.Map" parameterType="java.lang.String">
+    select yywd_name as yywdName,yywd_location yywdLocation,yywd_img_url yywdImgUrl,yywd_fkcz yywdFkcz,yywd_tktz
+    yywdTktz,yywd_cz yywdCz
+    FROM mina_home_yywd
+    WHERE yywd_name = #{name}
+    <if test='yywdFkcz != null and yywdFkcz != ""'>
+      and yywd_fkcz = #{yywdFkcz}
+    </if>
+    <if test='yywdTktz != null and yywdTktz != ""'>
+      and yywd_tktz = #{yywdTktz}
+    </if>
+    <if test='yywdCz != null and yywdCz != ""'>
+      and yywd_cz = #{yywdCz}
+    </if>
+  </select>
+
+  <!--查询营业网点总数-->
+  <select id="selectYywdCount" resultType="java.lang.String">
+    select count(1) as yywdsl
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName}
+  </select>
+
+  <!--查询发卡充资网点总数-->
+  <select id="selectFkczCount" resultType="java.lang.String">
+    select count(1) as fkczsl
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName} and yywd_fkcz = '1'
+  </select>
+
+  <!--查询退卡退资网点总数-->
+  <select id="selectTktzCount" resultType="java.lang.String">
+    select count(1) as tktzsl
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName} and yywd_tktz = '1'
+  </select>
+
+  <!--查询退卡退资网点总数-->
+  <select id="selectCzCount" resultType="java.lang.String">
+    select count(1) as czsl
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName} and yywd_cz = '1'
+  </select>
+
+  <!--根据省市区查询营业网点-->
+  <select id="selectYywdByPCD" resultMap="BaseResultMap">
+    select *
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName}
+    <if test='districtName != null and districtName != ""'>
+      and yywd_district_name = #{districtName}
+    </if>
+    <if test='yywdFkcz != null and yywdFkcz != ""'>
+      and yywd_fkcz = #{yywdFkcz}
+    </if>
+    <if test='yywdTktz != null and yywdTktz != ""'>
+      and yywd_tktz = #{yywdTktz}
+    </if>
+    <if test='yywdCz != null and yywdCz != ""'>
+      and yywd_cz = #{yywdCz}
+    </if>
+  </select>
+
+  <!--根据省市区查询营业网点名称-->
+  <select id="selectYywdName" resultMap="BaseResultMap">
+    select yywd_name,yywd_district_name
+    FROM mina_home_yywd
+    WHERE yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName} and yywd_location is null
+  </select>
+
+  <!--更新为高德地图的名字并录入经纬度-->
+  <update id="updateYywdName">
+    update mina_home_yywd
+    set yywd_name = #{newYywdName},yywd_location = #{location},yywd_img_url = #{yywdImgUrl}
+    WHERE yywd_name = #{oldYywdName} and yywd_province_code = #{provinceCode} and yywd_city_name = #{cityName}
+  </update>
+</mapper>
