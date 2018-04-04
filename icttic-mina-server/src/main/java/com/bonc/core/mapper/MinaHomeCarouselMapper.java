@@ -4,6 +4,7 @@ import com.bonc.core.entity.MinaHomeCarousel;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 首页轮播图Mapper
@@ -18,4 +19,5 @@ public interface MinaHomeCarouselMapper extends Mapper<MinaHomeCarousel> {
      */
     List<MinaHomeCarousel> selectImgList();
 
+    List<Map<String,Integer>> selectRealTimeDate();
 }

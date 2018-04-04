@@ -15,4 +15,9 @@
         FROM mina_home_carousel m
         WHERE m.img_state = 1
     </select>
+    <select id="selectRealTimeDate" resultType="java.util.Map">
+        select a.f_lines f_lines,a.f_outlets f_outlets,a.f_cards f_cards,a.f_citys f_citys
+        FROM mina_real_time_data a
+        WHERE f_data_id = 1
+    </select>
 </mapper>

@@ -32,5 +32,15 @@ public class MinaHomeCarouselController {
         return new ObjectRestResponse<>().rel(true).data(imgList).msg("mina_home_carousel");
     }
 
+    @RequestMapping(value = "/realTimeDate",method = RequestMethod.GET)
+    public ObjectRestResponse<List> selectRealTimeDate() {
+        try {
+            List result = minaHomeCarouselService.selectRealTimeDate();
+            return new ObjectRestResponse<>().data(result).rel(true).msg("实时数据");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ObjectRestResponse<>().rel(false).msg(e.getMessage());
+        }
+    }
 
 }

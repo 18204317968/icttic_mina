@@ -92,15 +92,16 @@
 
   <!--根据nodeId查询infoId，并查询出infoId的摘要-->
   <select id="selectCmsInfo" resultType="java.util.Map" parameterType="java.lang.String">
-    select a.f_info_id,a.f_title,IF(a.f_small_image is NULL,'',CONCAT('https://icttic.cn',a.f_small_image)) f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
+    select a.f_info_id,a.f_title,CASE WHEN a.f_small_image IS NULL THEN '' WHEN SUBSTR(a.f_small_image FROM 1 FOR 1) = '/' THEN CONCAT( 'https://icttic.cn', a.f_small_image ) ELSE a.f_small_image END f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
     from icttic_v1.cms_info_detail a ,icttic_v1.cms_info b
     where a.f_info_id = b.f_info_id
     and a.f_info_id in (select f_info_id FROM icttic_v1.cms_info WHERE f_node_id = ${nodeId})
+    and b.f_status = 'A' ORDER BY b.f_publish_date DESC
   </select>
 
   <!--根据infoId查询infoId的详情-->
   <select id="selectCmsInfoDetail" resultType="java.util.Map" parameterType="java.lang.String">
-    select a.f_info_id,a.f_title,REPLACE(c.f_value,'src="/','src="https://icttic.cn/') f_value,IF(a.f_small_image is NULL,'',CONCAT('https://icttic.cn',a.f_small_image)) f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
+    select a.f_info_id,a.f_title,c.f_value,CASE WHEN a.f_small_image IS NULL THEN '' WHEN SUBSTR(a.f_small_image FROM 1 FOR 1) = '/' THEN CONCAT( 'https://icttic.cn', a.f_small_image ) ELSE a.f_small_image END f_small_image,ifnull(a.f_author,'') f_author,b.f_publish_date
     from icttic_v1.cms_info_detail a ,icttic_v1.cms_info b, icttic_v1.cms_info_clob c
     where a.f_info_id = b.f_info_id
     and a.f_info_id = c.f_info_id

@@ -21,4 +21,9 @@ public class MinaHomeCarouselService {
         List<MinaHomeCarousel> minaHomeCarouselList = minaHomeCarouselMapper.selectImgList();
         return minaHomeCarouselList;
     }
+
+    public List selectRealTimeDate() {
+        List result = minaHomeCarouselMapper.selectRealTimeDate();
+        return result;
+        }
 }
